@@ -6,13 +6,12 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#define MAX_ALARM 5
+#define MAX_ALARM 15
 #define clear() printf("\033[H\033[J")
-
+#define CMD "/bin/bash"
 
 void catch_alarm(int signum){
-	signal(SIGALRM,catch_alarm);
-	printf("\n*** TIMEOUT AMIGOL ***\n");
+	printf("\n*** TIMEOUT ***\n");
 	exit(1);
 }
 int main (int agc, char const argv[]){
@@ -44,7 +43,7 @@ int main (int agc, char const argv[]){
 		}
 		else {
 			//hijo
-			execl("/bin/bash", "/bin/bash", NULL);
+			execl(CMD, CMD, NULL);
 		}
 		
 	}

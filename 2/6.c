@@ -12,13 +12,12 @@
 
 void catch_alarm(int signum){
 
-	printf("\n*** TIMEOUT AMIGOL ***\n");
+	printf("\n*** TIMEOUT ***\n");
 	exit(1);
-
 }
 void catch_sigint(int signum){
 
-	signal(SIGINT,catch_sigint);
+	//signal(SIGINT,catch_sigint);
 	printf("\nSIGINT RECIBIDO!\n");
 	alarm(0);
 	alarm(MAX_ALARM);
@@ -30,10 +29,8 @@ int main (int agc, char const argv[]){
 	signal(SIGALRM,catch_alarm);
 	signal(SIGINT,catch_sigint);
 	alarm(MAX_ALARM);
-	printf("ARRANCAMO\n");
-	while(1){
-		
-	}
+	printf("---COMIENZO---\n");
+	while(1);
 
 	return 0;
 
