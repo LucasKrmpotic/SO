@@ -1,7 +1,7 @@
 CFLAGS = -Wall -pthread -lrt
 CC = gcc
-OBJ = prog_a.o prog_b.o
-BIN = prog_a prog_b
+OBJ = obj/prog_a.o obj/prog_b.o
+BIN = bin/prog_a bin/prog_b
 
 
 
@@ -10,14 +10,14 @@ all: $(BIN)
 clean:
 	rm -f $(OBJ) $(BIN)  
 
-prog_a: prog_a.o
-	$(CC) -o prog_a prog_a.o $(CFLAGS)
+bin/prog_a: obj/prog_a.o
+	$(CC) -o bin/prog_a obj/prog_a.o $(CFLAGS)
 
-prog_a.o: prog_a.c
-	$(CC) -c prog_a.c -o prog_a.o $(CFLAGS)
+obj/prog_a.o: src/prog_a.c
+	$(CC) -c src/prog_a.c -o obj/prog_a.o $(CFLAGS)
 
-prog_b: prog_b.o
-	$(CC) -o prog_b prog_b.o $(CFLAGS)
+bin/prog_b: obj/prog_b.o
+	$(CC) -o bin/prog_b obj/prog_b.o $(CFLAGS)
 
-prog_b.o: prog_b.c
-	$(CC) -c prog_b.c -o prog_b.o $(CFLAGS)
+obj/prog_b.o: src/prog_b.c
+	$(CC) -c src/prog_b.c -o obj/prog_b.o $(CFLAGS)

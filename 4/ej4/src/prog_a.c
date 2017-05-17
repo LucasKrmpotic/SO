@@ -46,6 +46,7 @@ int main()
         MAP_ERROR();
 		return -1;
 	}
+    
 
     //leemos de stdin y escribimos a la memoria compartida
     char in;
@@ -59,18 +60,6 @@ int main()
            break;
            
     }
-
-    /*
-	printf("producer escribiending %s\n",message0);
-	sprintf(ptr,"%s",message0);
-	ptr += strlen(message0);
-	printf("producer escribiending %s\n",message1);
-	sprintf(ptr,"%s",message1);
-	ptr += strlen(message1);
-	printf("producer escribiending %s\n",message2);
-	sprintf(ptr,"%s",message2);
-	ptr += strlen(message2);
-    */
 
 	return 0;
 }
