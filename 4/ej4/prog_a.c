@@ -9,7 +9,14 @@
 #include <sys/types.h>
 #include "config.h"
 
-
+/*
+ *  Una sugerencia a la hora de ejecutar este
+ *  programa es:
+ *
+ *  Hacer ./prog_a y ./prog_b en ventanas de
+ *  terminal separadas
+ *
+ * */
 int main()
 {
     //nombre para el objeto de memoria compartido

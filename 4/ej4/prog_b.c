@@ -9,6 +9,13 @@
 #include "config.h"
 
 
+/*
+ * Sugerencia a la hora de ejecutar este programa:
+ * Hacer ./prog_a y ./prog_b en ventanas de terminal
+ * independientes
+ *
+ * */
+
 int main()
 {
 	const char *nombre = "/compartido";
