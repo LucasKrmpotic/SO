@@ -30,12 +30,15 @@ int main(void)
 		perror("connect()");
 		return 1;
 	}
-
+    char c;
 	while(1)
 	{
+        //PRODUCTOR
     /*  Leo de la entrada estándar y si es quit salir*/
-		nbytes = read(0, buffer, 256);
-		buffer[--nbytes] = 0;
+        nbytes = 0;
+        while((c = getchar()) != '\n'){
+            buffer[nbytes++] = c;
+        }
 		if(strncmp(buffer, "quit", 4) == 0)
 			break;
     /*  Escribo en el soket el mensaje para  el prog_b*/

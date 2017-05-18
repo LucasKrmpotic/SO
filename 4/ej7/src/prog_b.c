@@ -11,12 +11,12 @@ int connection_handler(int connection_fd)
 	int nbytes;
 	char buffer[256];
 
-  // leo el mensaje y lo muestro por la salida estándar
+    // CONSUMIDOR
+    // leo el mensaje y lo muestro por la salida estándar
 	while((nbytes = read(connection_fd, buffer, 256)))
 	{
-		buffer[nbytes] = 0;
+        if(index(buffer, EOF) != NULL) break;
 		printf("Mensaje del prog_a: %s\n", buffer);
-
 	}
   // cierro la conexión
 	close(connection_fd);
