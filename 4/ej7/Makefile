@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -lrt 
+CFLAGS = -lrt -g -Wall
 BIN = bin/prog_a bin/prog_b
 OBJ = obj/prog_a.o obj/prog_b.o
 
@@ -16,6 +16,6 @@ obj/prog_a.o: src/prog_a.c
 
 bin/prog_b: obj/prog_b.o
 	$(CC) -o bin/prog_b obj/prog_b.o $(CFLAGS)
-	
+
 obj/prog_b.o: src/prog_b.c
 	$(CC) -c src/prog_b.c -o obj/prog_b.o $(CFLAGS)

@@ -8,21 +8,17 @@
 #include <ctype.h>
 int connection_handler(int connection_fd)
 {
-	int nbytes, i;
+	int nbytes;
 	char buffer[256];
 
-	while(nbytes = read(connection_fd, buffer, 256))
+  // leo el mensaje y lo muestro por la salida estándar
+	while((nbytes = read(connection_fd, buffer, 256)))
 	{
 		buffer[nbytes] = 0;
-		printf("Mensaje del cliente: %s\n", buffer);
+		printf("Mensaje del prog_a: %s\n", buffer);
 
-		// Transformar texto a mayusculas
-		for(i = 0; i < nbytes; ++i)
-			buffer[i] = toupper(buffer[i]);
-		buffer[nbytes] = 0;
-
-		write(connection_fd, buffer, nbytes);
 	}
+  // cierro la conexión
 	close(connection_fd);
 	return 0;
 }
@@ -32,7 +28,6 @@ int main(void)
 	struct sockaddr_un address;
 	int socket_fd, connection_fd;
 	socklen_t address_length;
-	pid_t child;
 
 	socket_fd = socket(PF_UNIX, SOCK_STREAM, 0);
 	if(socket_fd < 0)
@@ -62,11 +57,12 @@ int main(void)
 		perror("listen()");
 		return 1;
 	}
-	// Espero file descriptors por cada cliente que se conecta
-	while((connection_fd = accept(socket_fd,
+	// Espero file descriptors del prog_b
+	if((connection_fd = accept(socket_fd,
 			                            (struct sockaddr *) &address,
 			                            &address_length)) > -1)
 	{
+    // Cuando recibo un mensaje llamo a connection_handler
 		connection_handler(connection_fd);
 		close(connection_fd);
 	}

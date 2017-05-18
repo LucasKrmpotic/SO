@@ -33,18 +33,16 @@ int main(void)
 
 	while(1)
 	{
+    /*  Leo de la entrada estándar y si es quit salir*/
 		nbytes = read(0, buffer, 256);
 		buffer[--nbytes] = 0;
 		if(strncmp(buffer, "quit", 4) == 0)
 			break;
-
+    /*  Escribo en el soket el mensaje para  el prog_b*/
 		write(socket_fd, buffer, nbytes);
 
-		nbytes = read(socket_fd, buffer, 256);
-		buffer[nbytes] = 0;
-		printf("%s\n", buffer);
 	}
-
+  // Cerramos la conexión antes de salir
 	close(socket_fd);
 
 	return 0;
