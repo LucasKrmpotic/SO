@@ -1,0 +1,174 @@
+\documentclass[12pt]{extarticle}
+\usepackage[spanish]{babel} 
+\usepackage[utf8]{inputenc} %Este es el paquete para que te muestre bien los caracteres latinos
+\usepackage[useregional]{datetime2} %paquete para la fecha
+\usepackage[a4paper]{geometry} %paquete para el tamaño de hoja
+\usepackage{changepage} %paquete para cambiar los márgenes a una sola parte del documento con \begin{adjustwidth} y \end{adjustwidth}
+\usepackage{lmodern}
+\usepackage{fancyhdr} %para los estilos de hoja, también para los l-rhead, l-rfoot
+\usepackage{listings} %paquete para el código
+\usepackage{xcolor} %paquete para los colores y las definiciones de colores
+\usepackage{multicol} %paquete para las multicolumnas
+\usepackage{inconsolata} %paquete para la fuente consolas
+%\usepackage{textcomp}
+\usepackage{graphicx} %paquete para las imágenes
+\graphicspath{ {images/} }
+\usepackage{url}
+
+
+\newcommand{\fecha}{\today}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\definecolor{alizarin}{rgb}{0.82, 0.1, 0.26}
+
+\lstdefinestyle{custom3c}{
+	basicstyle=\fontsize{12}{10}\ttfamily,
+	belowcaptionskip=1\baselineskip,
+  	breaklines=true,
+  	title=\lstname,	% show the filename of files included with \lstinputlisting; also try caption instead of title
+  	frame=L, %Este pone la línea (doble) separadora a la izquiera, ir probando entre l, L,r y R
+  	xleftmargin=\parindent,
+  	language=C,
+  	numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  	numberstyle=\color{mygray}, % the style that is used for the line-numbers
+  	rulecolor=\color{mygray},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  	showstringspaces=false,
+  	captionpos=b,                    % sets the caption-position to bottom
+  	keywordstyle=\bfseries\color{green!40!black},
+  	commentstyle=\itshape\color{purple!40!black},
+  	identifierstyle=\color{alizarin},
+  	stringstyle=\color{blue},
+  	escapechar=@,
+}
+
+
+%\lstinputlisting permite poner un archivo entero para que lo muestre
+%\begin{lstlisting} y \end{lstlisting} te permite tirarle el código ahí en el medio
+
+\begin{document}
+
+
+    \begin{titlepage}
+
+        \begin{center}
+            \includegraphics{logoUnpsjb.png}
+            \linebreak
+            \begin{huge}
+                Sistemas Operativos \\ Trabajo Práctico Nro. 4 \\ Comunicación entre procesos\\
+            \end{huge}
+            \vspace*{5mm}
+            \rule{10cm}{0.1mm}\\
+            \vspace*{3mm}
+            \begin{LARGE}
+                Cátedra:\\
+                \textbf{Profesor:} Lic. Marcelo Gómez\\
+                \vspace*{5mm}
+                \textbf{Ayudantes de cátedra:}\\ Lic. Lucy Marticorena\\APU Leandro Luque\\
+            \end{LARGE}
+            \vspace*{3mm}
+            \rule{10cm}{0.1mm}\\
+            \vspace*{5mm}
+            \begin{Large}
+                Alumnos:\\
+                KRMPOTIC, Lucas\\
+                SERRUYA ALOISI, Luciano\\
+                TOLEDO MARGALEF, Pablo\\
+            \end{Large}
+            \vspace*{5mm}
+            \Large\fecha
+    \end{center}
+
+    \end{titlepage}
+
+    \clearpage
+    \pagestyle{fancy}
+    \cfoot{}
+    \lhead{TP Nro. 4 - Comunicación entre procesos} 
+    \rhead{\includegraphics[scale=0.2]{logoUnpsjb.png}}
+    \lfoot{\thepage}
+    \rfoot{Krmpotic - Serruya Aloisi - Toledo Margalef}
+
+
+
+    \newcommand\fd{\textit{file descriptor }}
+    \newcommand\fds{\textit{file descriptors }}
+    
+    \section{Investigar el funcionamiento y la utilidad de \textit{select()}. Compilar y probar el ejemplo que se encuentra en \textit{man select\_tut}.}
+    
+    La página \textit{man} de la llamada al sistema ``select()'' provee la siguiente descripción:
+    \begin{quote}
+        \textit{select()} y \textit{pselect()} permite a un programa monitorear múltiples \fds, esperando hasta que uno o más de ellos estén en estado ``listo'' para algún tipo de operación de E/S. Un \fd se considera ``listo'' si es posible realizarle algún tipo de operación de E/S (por ejemplo, invocar a \textit{read} sin que se bloquee, o una escritura lo suficientemente pequeña).
+    \end{quote}
+
+    En otras palabras, podemos decir que la llamada al sistema \textit{select()} indica si hay datos disponibles para leer o si es posible escribir en un \fd.
+
+    Su cabecera es de la siguiente manera:
+
+    \vspace*{10mm}
+    \begin{adjustwidth}{-45mm}{-30mm}
+    \begin{lstlisting}[style=custom3c]
+        int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout);
+    \end{lstlisting}
+    \end{adjustwidth}
+
+    Para poder invocarla en un programa en C, se deben incorporar las siguientes directivas de preprocesador:
+
+    \vspace*{10mm}
+    \begin{lstlisting}[style=custom3c]
+        #include <sys/time.h>
+        #include <sys/types.h>
+        #include <sys/select.h> 
+    \end{lstlisting}
+
+    \subsection*{Argumentos}
+    \begin{itemize}
+        \item \textit{int} nfds: valor entero que equivale al máximo de todos los \fd de todos los conjuntos, incrementado en uno. En otras palabras, mientras se añadan \fds a cualquiera de los conjuntos, se debe calcular cuántos son, incrementarlo en uno, y luego pasarlo como el parámetro ``nfds''.
+        \item \textit{fd\_set} *readfds: conjunto de los \fds que se desean verificar si están disponibles para leer. La función devuelve en este parámetro qué \fds están disponibles para leer. Puede ser \textit{NULL}.
+        \item \textit{fd\_set} *writefds: conjunto de los \fds que se desean verificar si están disponibles para escribir. La función devuelve en este parámetro qué \fds están disponibles para escribir. Puede ser \textit{NULL}.
+        \item \textit{fd\_set} *exceptfds: conjunto de los \fds que se desean verificar si tienen condiciones de error pendientes. La función devuelve en este parámetro qué \fds tienen condiciones de error pendientes. Puede ser \textit{NULL}.
+        \item \textit{struct timeval} *timeout: especifica un intervalo máximo a esperar para que se termine la ejecución. Si este argumento apunta a un objeto de tipo \textit{struct timeval} cuyos miembros son 0, la función no se bloquea. Si el argumento es \textit{NULL}, la función se bloquea hasta que un evento causa que uno de los argumentos de conjuntos de \fds sean retornados con un valor válido (distinto de cero) o hasta que una señal arribe y necesite ser atendida. Si el tiempo especificado expira antes de que ocurra alguno de los eventos anteriores, \textit{select()} termina exitosamente y retorna un 0.
+    \end{itemize}
+
+    Los objetos de \fds o más bien \textit{máscaras} de \fds pueden ser inicializados y evaluados con los siguientes macros:
+
+    \begin{itemize}
+        \item \textbf{FD\_CLR}(\textit{fd}, \textit{\&fdset})
+        \item \textbf{FD\_ISSET}(\textit{fd}, \textit{\&fdset})
+        \item \textbf{FD\_SET}(\textit{fd}, \textit{\&fdset})
+        \item \textbf{FD\_ZERO}(\textit{\&fdset})
+    \end{itemize}
+
+    \subsection*{Comportamiento}
+    \textit{select()} devuelve la cantidad de \fds en estado ``listo'' contenidos en las máscaras de bits.
+
+    Si todos los parámetros son \textit{NULL}, la función se bloquea hasta ser interrumpida por una señal.
+
+    Si la función falla, retorna -1 y los objetos apuntados por los parámetros \textit{readfds}, \textit{writefds}, y \textit{exceptfds} no son modificados. En caso de que el intervalo de tiempo expire y no se cumplió la condición para ninguno de los \fds especificados, los objetos tienen todos sus bits seteados a 0.
+
+    \clearpage
+
+    
+    \section{Referencias}
+    \begin{itemize}
+        \item \url{http://www.mkssoftware.com/docs/man3/select.3.asp}
+        \item \url{https://en.wikipedia.org/wiki/Select_(Unix)}
+        \item \url{http://www.tutorialspoint.com/unix_system_calls/_newselect.htm}
+        \item Página \textit{man} de \textit{select}
+    \end{itemize}
+
+
+
+
+
+\end{document}
+
+
+
+This text will not show up in the output.
+\begin{lstlisting}
+        
+\textgreater    %>
+\textless       %<
+\textbar        %|
