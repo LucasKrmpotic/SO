@@ -15,6 +15,7 @@ int connection_handler(int connection_fd)
     // leo el mensaje y lo muestro por la salida estándar
 	while((nbytes = read(connection_fd, buffer, 256)))
 	{
+        buffer[nbytes] = 0;
         if(index(buffer, EOF) != NULL) break;
 		printf("Mensaje del prog_a: %s\n", buffer);
 	}

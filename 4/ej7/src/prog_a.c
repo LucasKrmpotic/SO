@@ -39,6 +39,7 @@ int main(void)
         while((c = getchar()) != '\n'){
             buffer[nbytes++] = c;
         }
+        buffer[nbytes] = 0;
 		if(strncmp(buffer, "quit", 4) == 0)
 			break;
     /*  Escribo en el soket el mensaje para  el prog_b*/

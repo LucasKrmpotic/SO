@@ -1,7 +1,7 @@
 CC = gcc
 ODIR = obj
 SDIR = src
-OUT  = servidor
+OUT  = bin/servidor
 
 HARDSRC = $(SDIR)/hardware.c $(SDIR)/hardware.h
 COMSRC = $(SDIR)/comunicaciones.c $(SDIR)/comunicaciones.h $(SDIR)/hardware.h

@@ -19,7 +19,3 @@ bin/prog_b: obj/prog_b.o
 	
 obj/prog_b.o: src/prog_b.c
 	$(CC) -c src/prog_b.c -o obj/prog_b.o $(CFLAGS)
-
-prog_a 
-
-
